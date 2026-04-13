@@ -1,0 +1,253 @@
+﻿openapi: 3.0.3
+info:
+  title: API KMP + Ktor (ATV1)
+  version: 1.0.0
+  description: API de exemplo com Ktor, PostgreSQL, Flyway e repositórios com Exposed.
+servers:
+  - url: http://localhost:8080
+paths:
+  /drivers:
+    get:
+      summary: Lista pilotos
+      responses:
+        '200':
+          description: Lista de pilotos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Driver'
+    post:
+      summary: Cria piloto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDriverRequest'
+      responses:
+        '201':
+          description: Piloto criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+  /drivers/{id}:
+    get:
+      summary: Busca piloto por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Piloto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '404':
+          description: Piloto nao encontrado
+    put:
+      summary: Atualiza piloto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDriverRequest'
+      responses:
+        '200':
+          description: Piloto atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Driver'
+        '404':
+          description: Piloto nao encontrado
+    delete:
+      summary: Remove piloto
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Piloto removido
+        '404':
+          description: Piloto nao encontrado
+  /race-results:
+    get:
+      summary: Lista resultados de corrida
+      responses:
+        '200':
+          description: Lista de resultados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RaceResult'
+    post:
+      summary: Cria resultado de corrida
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRaceResultRequest'
+      responses:
+        '201':
+          description: Resultado criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RaceResult'
+        '400':
+          description: Payload invalido ou driverId inexistente
+  /race-results/{id}:
+    get:
+      summary: Busca resultado por ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Resultado encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RaceResult'
+        '404':
+          description: Resultado nao encontrado
+    put:
+      summary: Atualiza resultado
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRaceResultRequest'
+      responses:
+        '200':
+          description: Resultado atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RaceResult'
+        '400':
+          description: Payload invalido ou driverId inexistente
+        '404':
+          description: Resultado nao encontrado
+    delete:
+      summary: Remove resultado
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Resultado removido
+        '404':
+          description: Resultado nao encontrado
+components:
+  schemas:
+    Driver:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        team:
+          type: string
+        nationality:
+          type: string
+      required: [id, name, team, nationality]
+    CreateDriverRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        team:
+          type: string
+        nationality:
+          type: string
+      required: [name, team, nationality]
+    UpdateDriverRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        team:
+          type: string
+        nationality:
+          type: string
+      required: [name, team, nationality]
+    RaceResult:
+      type: object
+      properties:
+        id:
+          type: integer
+        season:
+          type: integer
+        grandPrix:
+          type: string
+        position:
+          type: integer
+        points:
+          type: integer
+        driverId:
+          type: integer
+      required: [id, season, grandPrix, position, points, driverId]
+    CreateRaceResultRequest:
+      type: object
+      properties:
+        season:
+          type: integer
+        grandPrix:
+          type: string
+        position:
+          type: integer
+        points:
+          type: integer
+        driverId:
+          type: integer
+      required: [season, grandPrix, position, points, driverId]
+    UpdateRaceResultRequest:
+      type: object
+      properties:
+        season:
+          type: integer
+        grandPrix:
+          type: string
+        position:
+          type: integer
+        points:
+          type: integer
+        driverId:
+          type: integer
+      required: [season, grandPrix, position, points, driverId]
+
